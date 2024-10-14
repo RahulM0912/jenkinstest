@@ -21,8 +21,8 @@ pipeline {
             steps {
                 echo 'Starting to push the image'
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', "${DOCKERHUB_CREDENTIALS}") {
-                        customImage.push("${IMAGE_NAME}:${IMAGE_TAG}")
+                    docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDENTIALS) {
+                        customImage.push()
                     }
                 }
             }
