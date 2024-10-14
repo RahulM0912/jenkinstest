@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhubcredentials') // this is docker hub token
+        DOCKERHUB_CREDENTIALS = credentials('dockerhubcredentials') // Docker Hub token
         IMAGE_NAME = 'kiaser126/junkinstest' // Docker Hub repo name
         IMAGE_TAG = 'latest'
     }
@@ -11,7 +11,6 @@ pipeline {
         stage('Build image') {
             steps {
                 echo 'Starting to build docker image'
-
                 script {
                     def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
                 }
@@ -20,14 +19,16 @@ pipeline {
 
         stage('Push Image') {
             steps {
-                echo 'starting to puish the image'
+                echo 'Starting to push the image'
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', "${DOCKERHUB_CREDENTIALS}") {
-                    customImage.push("${IMAGE_NAME}:${IMAGE_TAG}")
+                        customImage.push("${IMAGE_TAG}")
+                    }
                 }
             }
         }
     }
+    
     post {
         always {
             sh 'docker logout'
