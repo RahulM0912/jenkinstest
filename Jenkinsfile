@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhubcredentials') // Docker Hub token
+        DOCKERHUB_CREDENTIALS = credentials('kaiser126-dockerhub') // Docker Hub token
         IMAGE_NAME = 'kiaser126/junkinstest' // Docker Hub repo name
         IMAGE_TAG = 'latest'
     }
