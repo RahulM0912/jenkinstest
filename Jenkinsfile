@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:stable'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhubcredentials') // Adjust with your credentials ID
@@ -13,35 +8,17 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Build image') {
             steps {
-                git url: 'https://github.com/RahulM0912/jenkinstest.git', branch: 'main'
-                echo 'Git Checkout completed'
-            }
-        }
+                echo 'Starting to build docker image'
 
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
-                echo 'Build Image Completed'
-            }
-        }
-
-        stage('Login to Docker Hub') {
-            steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                echo 'Login Completed'
-            }
-        }
-
-        stage('Push Docker Image to Docker Hub') {
-            steps {
-                sh 'docker push ${IMAGE_NAME}:${IMAGE_TAG}'
-                echo 'Push Image Completed'
+                script {
+                    def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                    customImage.push()
+                }
             }
         }
     }
-
     post {
         always {
             sh 'docker logout'
