@@ -18,18 +18,17 @@ pipeline {
         }
 
         stage('Push Image') {
-            agent any
             steps {
                 echo 'Starting to push the image'
                 withCredentials([usernamePassword(credentialsId: 'kaiser126-dockerhub', passwordVariable: 'DOCKERHUB_TOKEN', usernameVariable: 'DOCKERHUB_USERNAME')]) {
-                    sh "docker login -u kiaser126 -p dckr_pat_srnty2J6H1hUxJLiiwasKMXWUdw "
-                    sh ' docker push kiaser126/junkinstest:latest '
+                    // Using --password-stdin to securely log in to Docker
+                    sh 'echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin'
+                    sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
                 }
-                
             }
         }
     }
-    
+
     post {
         always {
             sh 'docker logout'
