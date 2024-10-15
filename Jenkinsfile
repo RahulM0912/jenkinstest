@@ -9,11 +9,10 @@ pipeline {
 
     stages {
         stage('Build image') {
+            agent any
             steps {
                 echo 'Starting to build docker image'
-                script {
-                    def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
-                }
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
             }
         }
 
