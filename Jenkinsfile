@@ -25,7 +25,7 @@ pipeline {
                     sh "docker login -u kiaser126 -p dckr_pat_srnty2J6H1hUxJLiiwasKMXWUdw "
                     sh ' docker push kiaser126/junkinstest:latest '
                 }
-                }
+                
             }
         }
     }
